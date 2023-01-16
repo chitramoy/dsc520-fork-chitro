@@ -1,0 +1,670 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}{\f2\fnil\fcharset1 Segoe UI Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 > # Assignment: ASSIGNMENT 5\par
+> # Name: Mukherjee, Chitramoy\par
+> # Date: 2023-01-11\par
+> \par
+> #Assignment 5.1\par
+> #Using the dplyr package, use the 6 different operations to analyze/transform the data - GroupBy, Summarize, Mutate, Filter, Select, and Arrange\par
+> library(readxl)\par
+> ## Set the working directory to the root of your DSC 520 directory\par
+> setwd("C:/Users/chitro/Desktop/dsc520-fork-chitro")\par
+> housing_df <- read_excel("data/week-7-housing.xlsx")\par
+> head (housing_df)\par
+# A tibble: 6 \'d7 24\par
+  `Sale Date`         Sale P\'85\'b9 sale_\'85\'b2 sale_\'85\'b3 sale_\'85\f1\u8308? sitet\'85\u8309? addr_\'85\u8310?  zip5 ctyname posta\'85\u8311?   lon   lat build\'85\u8312? squar\'85\u8313? bedro\'85\u735? bath_\'85\u735? bath_\'85\u735? bath_\'85\u735? year_\'85\u735? year_\'85\u735?\par
+  <dttm>                 <dbl>   <dbl>   <dbl> <chr>   <chr>   <chr>   <dbl> <chr>   <chr>   <dbl> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>\par
+1 2006-01-03 00:00:00   698000       1       3 NA      R1      17021 \'85 98052 REDMOND REDMOND -122.  47.7       9    2810       4       2       1       0    2003       0\par
+2 2006-01-03 00:00:00   649990       1       3 NA      R1      11927 \'85 98052 REDMOND REDMOND -122.  47.7       9    2880       4       2       0       1    2006       0\par
+3 2006-01-03 00:00:00   572500       1       3 NA      R1      13315 \'85 98052 NA      REDMOND -122.  47.7       8    2770       4       1       1       1    1987       0\par
+4 2006-01-03 00:00:00   420000       1       3 NA      R1      3303 1\'85 98052 REDMOND REDMOND -122.  47.6       8    1620       3       1       0       1    1968       0\par
+5 2006-01-03 00:00:00   369900       1       3 15      R1      16126 \'85 98052 REDMOND REDMOND -122.  47.7       7    1440       3       1       0       1    1980       0\par
+6 2006-01-03 00:00:00   184667       1      15 18 51   R1      8101 2\'85 98053 NA      REDMOND -122.  47.7       7    4160       4       2       1       1    2005       0\par
+# \'85 with 4 more variables: current_zoning <chr>, sq_ft_lot <dbl>, prop_type <chr>, present_use <dbl>, and abbreviated variable names \f0\'b9\u8203?`Sale Price`, \'b2\u8203?sale_reason,\par
+#   \'b3\u8203?sale_instrument, \f1\u8308?\u8203?sale_warning, \u8309?\u8203?sitetype, \u8310?\u8203?addr_full, \u8311?\u8203?postalctyn, \u8312?\u8203?building_grade, \u8313?\u8203?square_feet_total_living, \u735?\u8203?bedrooms, \u735?\u8203?bath_full_count, \u735?\u8203?bath_half_count,\par
+#   \u735?\u8203?bath_3qtr_count, \u735?\u8203?year_built, \u735?\u8203?year_renovated\par
+# \f2\u8505?\f0  Use `colnames()` to see all variable names\par
+> colnames(housing_df)\par
+ [1] "Sale Date"                "Sale Price"               "sale_reason"              "sale_instrument"          "sale_warning"             "sitetype"                \par
+ [7] "addr_full"                "zip5"                     "ctyname"                  "postalctyn"               "lon"                      "lat"                     \par
+[13] "building_grade"           "square_feet_total_living" "bedrooms"                 "bath_full_count"          "bath_half_count"          "bath_3qtr_count"         \par
+[19] "year_built"               "year_renovated"           "current_zoning"           "sq_ft_lot"                "prop_type"                "present_use"             \par
+> class(housing_df)\par
+[1] "tbl_df"     "tbl"        "data.frame"\par
+> \par
+> \par
+> install.packages("dplyr")\par
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:\par
+\par
+{{\field{\*\fldinst{HYPERLINK https://cran.rstudio.com/bin/windows/Rtools/ }}{\fldrslt{https://cran.rstudio.com/bin/windows/Rtools/\ul0\cf0}}}}\f0\fs22\par
+Installing package into \lquote C:/Users/chitro/AppData/Local/R/win-library/4.2\rquote\par
+(as \lquote lib\rquote  is unspecified)\par
+trying URL '{{\field{\*\fldinst{HYPERLINK https://cran.rstudio.com/bin/windows/contrib/4.2/dplyr_1.0.10.zip }}{\fldrslt{https://cran.rstudio.com/bin/windows/contrib/4.2/dplyr_1.0.10.zip\ul0\cf0}}}}\f0\fs22 '\par
+Content type 'application/zip' length 1301172 bytes (1.2 MB)\par
+downloaded 1.2 MB\par
+\par
+package \lquote dplyr\rquote  successfully unpacked and MD5 sums checked\par
+\par
+The downloaded binary packages are in\par
+\tab C:\\Users\\chitro\\AppData\\Local\\Temp\\RtmpKqsQIf\\downloaded_packages\par
+> library(dplyr)\par
+\par
+Attaching package: \lquote dplyr\rquote\par
+\par
+The following objects are masked from \lquote package:stats\rquote :\par
+\par
+    filter, lag\par
+\par
+The following objects are masked from \lquote package:base\rquote :\par
+\par
+    intersect, setdiff, setequal, union\par
+\par
+> housing_df %>% select (`Sale Price`, `Sale Date`) %>%  filter(`Sale Price` > 1000000)  %>%\par
++ mutate(year=format(as.Date(`Sale Date`, format="%m/%d/%Y"),"%Y")) %>% \par
++ group_by(year) %>% \par
++ summarize(average_sale_price=mean(`Sale Price`),sdev_sale_price=sd(`Sale Price`)) %>%\par
++ arrange(desc(year))\par
+# A tibble: 11 \'d7 3\par
+   year  average_sale_price sdev_sale_price\par
+   <chr>              <dbl>           <dbl>\par
+ 1 2016            1376730.         530913.\par
+ 2 2015            1244531.         259357.\par
+ 3 2014            1254733.         263183.\par
+ 4 2013            1353820.         443343.\par
+ 5 2012            2236266.         905252.\par
+ 6 2011            2841839.        1361869.\par
+ 7 2010            1462957.         645088.\par
+ 8 2009            1369636.         292656.\par
+ 9 2008            2574278.         866200.\par
+10 2007            1624951.         588392.\par
+11 2006            1383097.         369128.\par
+> \par
+> install.packages("purrr")\par
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:\par
+\par
+{{\field{\*\fldinst{HYPERLINK https://cran.rstudio.com/bin/windows/Rtools/ }}{\fldrslt{https://cran.rstudio.com/bin/windows/Rtools/\ul0\cf0}}}}\f0\fs22\par
+Installing package into \lquote C:/Users/chitro/AppData/Local/R/win-library/4.2\rquote\par
+(as \lquote lib\rquote  is unspecified)\par
+trying URL '{{\field{\*\fldinst{HYPERLINK https://cran.rstudio.com/bin/windows/contrib/4.2/purrr_1.0.1.zip }}{\fldrslt{https://cran.rstudio.com/bin/windows/contrib/4.2/purrr_1.0.1.zip\ul0\cf0}}}}\f0\fs22 '\par
+Content type 'application/zip' length 498686 bytes (486 KB)\par
+downloaded 486 KB\par
+\par
+package \lquote purrr\rquote  successfully unpacked and MD5 sums checked\par
+\par
+The downloaded binary packages are in\par
+\tab C:\\Users\\chitro\\AppData\\Local\\Temp\\RtmpKqsQIf\\downloaded_packages\par
+> library(purrr)\par
+> \par
+> #Using the purrr package \f1\endash  perform 2 functions on your dataset.  You could use zip_n, keep, discard, compact, etc\par
+> bedrooms_count <- keep(housing_df$bedrooms, ~ .x >= 8) \par
+> head(bedrooms_count)\par
+[1]  9  8 10 11  9  8\par
+> sale_price_1500000 <- discard(housing_df$`Sale Price`, ~ .x <= 1500000) \par
+> head(sale_price_1500000)\par
+[1] 1900000 1520000 1588359 2500000 2169000 1534000\par
+> \par
+> #Use the cbind and rbind function on your dataset\par
+> housing_df1 <- data.frame(housing_df %>% select (square_feet_total_living, bedrooms, `Sale Price`) %>% filter(`Sale Price` > 600000))\par
+> head(housing_df1)\par
+  square_feet_total_living bedrooms Sale.Price\par
+1                     2810        4     698000\par
+2                     2880        4     649990\par
+3                     3960        5    1050000\par
+4                     3720        4     875000\par
+5                     4160        4     660000\par
+6                     2760        4     650000\par
+> housing_df2 <- data.frame(housing_df %>% select (square_feet_total_living, bedrooms, `Sale Price`) %>% filter(`Sale Price` > 600000))\par
+> head(housing_df2)\par
+  square_feet_total_living bedrooms Sale.Price\par
+1                     2810        4     698000\par
+2                     2880        4     649990\par
+3                     3960        5    1050000\par
+4                     3720        4     875000\par
+5                     4160        4     660000\par
+6                     2760        4     650000\par
+> \par
+> housisng_df_cbind <- cbind(housing_df1, housing_df2)\par
+> housisng_df_cbind\par
+    square_feet_total_living bedrooms Sale.Price square_feet_total_living bedrooms Sale.Price\par
+1                       2810        4     698000                     2810        4     698000\par
+2                       2880        4     649990                     2880        4     649990\par
+3                       3960        5    1050000                     3960        5    1050000\par
+4                       3720        4     875000                     3720        4     875000\par
+5                       4160        4     660000                     4160        4     660000\par
+6                       2760        4     650000                     2760        4     650000\par
+7                       3180        3     803000                     3180        3     803000\par
+8                       4000        4     765000                     4000        4     765000\par
+9                       3520        4     765000                     3520        4     765000\par
+10                      3740        4    1392000                     3740        4    1392000\par
+11                      3090        3     717390                     3090        3     717390\par
+12                      3840        5     949950                     3840        5     949950\par
+13                      3520        4     905000                     3520        4     905000\par
+14                      2300        3     750073                     2300        3     750073\par
+15                      2305        3     690749                     2305        3     690749\par
+16                      3010        4     640000                     3010        4     640000\par
+17                      5440        4    1445000                     5440        4    1445000\par
+18                      3400        3     729000                     3400        3     729000\par
+19                      3150        4     754500                     3150        4     754500\par
+20                      2520        3     640900                     2520        3     640900\par
+21                      2680        2    1053649                     2680        2    1053649\par
+22                      4100        4     870000                     4100        4     870000\par
+23                      3160        3     844148                     3160        3     844148\par
+24                      3290        5     765719                     3290        5     765719\par
+25                      2680        4     689000                     2680        4     689000\par
+26                      3990        5     849990                     3990        5     849990\par
+27                      3020        4     798000                     3020        4     798000\par
+28                      6610        4    1900000                     6610        4    1900000\par
+29                      2700        3    1080135                     2700        3    1080135\par
+30                      4340        4    1075000                     4340        4    1075000\par
+31                      2520        3     691321                     2520        3     691321\par
+32                      2170        2     657953                     2170        2     657953\par
+33                      2880        4     623990                     2880        4     623990\par
+34                      2330        4     661500                     2330        4     661500\par
+35                      2870        4     650100                     2870        4     650100\par
+36                      2930        4     879950                     2930        4     879950\par
+37                      3260        3     810000                     3260        3     810000\par
+38                      5710        5     732500                     5710        5     732500\par
+39                      2700        4     655000                     2700        4     655000\par
+40                      2390        2     665906                     2390        2     665906\par
+41                      2540        4     711000                     2540        4     711000\par
+42                      3620        5     647500                     3620        5     647500\par
+43                      4640        5    1520000                     4640        5    1520000\par
+44                      2920        4     714950                     2920        4     714950\par
+45                      2830        5     628241                     2830        5     628241\par
+46                       660        0    1390000                      660        0    1390000\par
+47                      3280        3    1390000                     3280        3    1390000\par
+48                      2170        2     687088                     2170        2     687088\par
+49                      3350        4     745800                     3350        4     745800\par
+50                      2880        4     634990                     2880        4     634990\par
+51                      3760        5     928800                     3760        5     928800\par
+52                      3560        4     795000                     3560        4     795000\par
+53                      3210        4     670000                     3210        4     670000\par
+54                      3150        4     799950                     3150        4     799950\par
+55                      3960        4     650000                     3960        4     650000\par
+56                      3690        5     855000                     3690        5     855000\par
+57                      3680        4     855000                     3680        4     855000\par
+58                      4140        4     855000                     4140        4     855000\par
+59                      3150        4     720990                     3150        4     720990\par
+60                      3530        4     899950                     3530        4     899950\par
+61                      4100        4     870000                     4100        4     870000\par
+62                      2980        5     671332                     2980        5     671332\par
+63                      2560        3     614000                     2560        3     614000\par
+64                      2490        3     609500                     2490        3     609500\par
+65                      2810        3     693300                     2810        3     693300\par
+66                      2570        3     660000                     2570        3     660000\par
+67                      2570        4     650000                     2570        4     650000\par
+68                      4550        4    1100000                     4550        4    1100000\par
+69                      3840        4     940000                     3840        4     940000\par
+70                      2630        4     602450                     2630        4     602450\par
+71                      2740        4     880000                     2740        4     880000\par
+72                      3220        5     704990                     3220        5     704990\par
+73                      2530        4     631235                     2530        4     631235\par
+74                      5350        4    1380000                     5350        4    1380000\par
+75                      2910        4     789000                     2910        4     789000\par
+76                      3200        3     759995                     3200        3     759995\par
+77                      3520        4     729950                     3520        4     729950\par
+78                      3720        4    1050000                     3720        4    1050000\par
+79                      2780        4     632990                     2780        4     632990\par
+80                      2400        4     608000                     2400        4     608000\par
+81                      4240        4    1300000                     4240        4    1300000\par
+82                      3220        4     729990                     3220        4     729990\par
+83                      2860        5     659990                     2860        5     659990\par
+84                      4520        4     991550                     4520        4     991550\par
+85                      2590        3     662501                     2590        3     662501\par
+86                      3490        4     852000                     3490        4     852000\par
+87                      3090        4     770910                     3090        4     770910\par
+88                      2470        3     619950                     2470        3     619950\par
+89                      2700        2     839900                     2700        2     839900\par
+90                      3360        2    1588359                     3360        2    1588359\par
+91                      3940        4     920000                     3940        4     920000\par
+92                      3990        5     854990                     3990        5     854990\par
+93                      3430        4     620000                     3430        4     620000\par
+94                      3480        3    1450000                     3480        3    1450000\par
+95                       900        2    1450000                      900        2    1450000\par
+96                      3520        5     765626                     3520        5     765626\par
+97                      3290        4     764950                     3290        4     764950\par
+98                      2050        4     603000                     2050        4     603000\par
+99                      5500        4    1025000                     5500        4    1025000\par
+100                     3540        4    1490000                     3540        4    1490000\par
+101                     4290        4     935000                     4290        4     935000\par
+102                     3280        4     800000                     3280        4     800000\par
+103                     3370        4     750000                     3370        4     750000\par
+104                     2280        4     699950                     2280        4     699950\par
+105                     2950        4     672000                     2950        4     672000\par
+106                     3200        4     889000                     3200        4     889000\par
+107                     2870        4     641500                     2870        4     641500\par
+108                     2020        4     638000                     2020        4     638000\par
+109                     2300        2     750591                     2300        2     750591\par
+110                     3150        4     729900                     3150        4     729900\par
+111                     2940        4     679950                     2940        4     679950\par
+112                     2630        3     624500                     2630        3     624500\par
+113                     4010        4     855990                     4010        4     855990\par
+114                     2860        4     832950                     2860        4     832950\par
+115                     2300        2     632900                     2300        2     632900\par
+116                     2170        2     624900                     2170        2     624900\par
+117                     3220        4     835000                     3220        4     835000\par
+118                     3320        4     700000                     3320        4     700000\par
+119                     4050        4     965000                     4050        4     965000\par
+120                     2930        3     665500                     2930        3     665500\par
+121                     2530        4     629950                     2530        4     629950\par
+122                     2610        3     660000                     2610        3     660000\par
+123                     6050        6    1425000                     6050        6    1425000\par
+124                     3040        4     786950                     3040        4     786950\par
+125                     3190        3     778000                     3190        3     778000\par
+126                     3220        5     726990                     3220        5     726990\par
+127                     2380        2     624900                     2380        2     624900\par
+128                     3990        4     915000                     3990        4     915000\par
+129                     4990        4     915000                     4990        4     915000\par
+130                     4240        4     915000                     4240        4     915000\par
+131                     3090        4     768950                     3090        4     768950\par
+132                     2570        4     679950                     2570        4     679950\par
+133                     2310        3     670676                     2310        3     670676\par
+134                     2870        5     650000                     2870        5     650000\par
+135                     2640        3     642470                     2640        3     642470\par
+136                     3110        4     750000                     3110        4     750000\par
+137                     2890        5     665000                     2890        5     665000\par
+138                     2080        4     620000                     2080        4     620000\par
+139                     3360        3    1032209                     3360        3    1032209\par
+140                     4080        4     924950                     4080        4     924950\par
+141                     3220        5     739990                     3220        5     739990\par
+142                     2980        5     679990                     2980        5     679990\par
+143                     6050        6    1425000                     6050        6    1425000\par
+144                     2620        4     760000                     2620        4     760000\par
+145                     4630        5    1369900                     4630        5    1369900\par
+146                     3360        3    1000000                     3360        3    1000000\par
+147                     2840        3     634000                     2840        3     634000\par
+148                     6310        4    2500000                     6310        4    2500000\par
+149                     4060        4    1195000                     4060        4    1195000\par
+150                     3220        4     668000                     3220        4     668000\par
+151                     5080        4    2169000                     5080        4    2169000\par
+152                     2850        4     799950                     2850        4     799950\par
+153                     2270        4     689950                     2270        4     689950\par
+154                     2300        3     659900                     2300        3     659900\par
+155                     2470        4     625000                     2470        4     625000\par
+156                     3300        3     750000                     3300        3     750000\par
+157                     2170        2     647400                     2170        2     647400\par
+158                     4070        4    1175000                     4070        4    1175000\par
+159                     3930        4    1092000                     3930        4    1092000\par
+160                     2730        4     905000                     2730        4     905000\par
+161                     3270        5     750270                     3270        5     750270\par
+162                     2860        4     725000                     2860        4     725000\par
+163                     2570        4     650000                     2570        4     650000\par
+164                     2300        3     699950                     2300        3     699950\par
+165                     3930        4    1025000                     3930        4    1025000\par
+166                     2720        3     771408                     2720        3     771408\par
+ [ reached 'max' / getOption("max.print") -- omitted 6054 rows ]\par
+> \par
+> housing_df3 <- data.frame(housing_df %>% select (square_feet_total_living, bedrooms, `Sale Price`) %>% filter(`Sale Price` > 1100000))\par
+> head(housing_df3)\par
+  square_feet_total_living bedrooms Sale.Price\par
+1                     3740        4    1392000\par
+2                     5440        4    1445000\par
+3                     6610        4    1900000\par
+4                     4640        5    1520000\par
+5                      660        0    1390000\par
+6                     3280        3    1390000\par
+> housing_df4 <- data.frame(housing_df %>% select (square_feet_total_living, bedrooms, `Sale Price`) %>% filter(bedrooms > 6))\par
+> head(housing_df4)\par
+  square_feet_total_living bedrooms Sale.Price\par
+1                     5200        9     413000\par
+2                     8490        7     350000\par
+3                     6230        8    1185000\par
+4                     2760        7     609900\par
+5                     6340       10     450000\par
+6                     2260        7     225000\par
+> housisng_df_rbind <- rbind(housing_df3, housing_df4)\par
+> housisng_df_rbind\par
+    square_feet_total_living bedrooms Sale.Price\par
+1                       3740        4    1392000\par
+2                       5440        4    1445000\par
+3                       6610        4    1900000\par
+4                       4640        5    1520000\par
+5                        660        0    1390000\par
+6                       3280        3    1390000\par
+7                       5350        4    1380000\par
+8                       4240        4    1300000\par
+9                       3360        2    1588359\par
+10                      3480        3    1450000\par
+11                       900        2    1450000\par
+12                      3540        4    1490000\par
+13                      6050        6    1425000\par
+14                      6050        6    1425000\par
+15                      4630        5    1369900\par
+16                      6310        4    2500000\par
+17                      4060        4    1195000\par
+18                      5080        4    2169000\par
+19                      4070        4    1175000\par
+20                      4090        4    1130000\par
+21                      2800        3    1174477\par
+22                      3320        4    1534000\par
+23                      4330        4    1389900\par
+24                      5200        4    1455000\par
+25                      3280        4    1125000\par
+26                      5640        4    1650000\par
+27                      3280        4    1125000\par
+28                      6680        4    1968000\par
+29                      4160        4    1219000\par
+30                      5030        4    1768000\par
+31                      8090        4    2569000\par
+32                      5750        4    1879000\par
+33                      4710        4    2583000\par
+34                      4420        4    1540000\par
+35                      4840        4    1250000\par
+36                      5270        4    1150000\par
+37                      4800        4    1475000\par
+38                      3940        4    1265000\par
+39                      5730        6    1772500\par
+40                      6010        4    1875000\par
+41                      4650        5    1650000\par
+42                      5270        4    3000000\par
+43                      4720        4    1295000\par
+44                      6360        4    1650000\par
+45                      3470        3    1595000\par
+46                      4230        4    1434000\par
+47                      6230        8    1185000\par
+48                      4250        4    1295000\par
+49                      6340        5    1750000\par
+50                      2410        2    1262500\par
+51                      3624        4    1165000\par
+52                      4640        4    1660000\par
+53                      2800        3    1299950\par
+54                      6050        4    1818026\par
+55                      2960        4    1315000\par
+56                      5340        6    1230000\par
+57                      3560        4    1100950\par
+58                      3360        2    1303636\par
+59                      4770        5    1180000\par
+60                      4840        4    1350000\par
+61                      4330        4    1200000\par
+62                      4580        4    1300000\par
+63                      4910        4    1725000\par
+64                      4520        4    1188000\par
+65                      2800        3    1350000\par
+66                      6970        4    1580000\par
+67                      2800        4    1316000\par
+68                      6970        4    1580000\par
+69                      5020        4    1189000\par
+70                      6280        4    1105000\par
+71                      4410        4    1180000\par
+72                      2640        5    1340000\par
+73                      3530        4    1168000\par
+74                      4560        4    1620000\par
+75                      4480        4    1287500\par
+76                      5400        5    1600000\par
+77                      4260        4    1175000\par
+78                      3820        4    1181950\par
+79                      4770        5    1217000\par
+80                      6310        3    1450000\par
+81                      2680        2    1150000\par
+82                      5360        4    2235000\par
+83                      3970        4    1229302\par
+84                      4260        5    1350000\par
+85                      3360        3    1125000\par
+86                     10630        5    2988000\par
+87                      4240        4    1314574\par
+88                      4920        4    1230000\par
+89                      5300        4    2493000\par
+90                      3090        3    1600000\par
+91                       550        1    1600000\par
+92                      3830        5    2625000\par
+93                      3330        4    2625000\par
+94                      3480        4    2625000\par
+95                      3370        4    2625000\par
+96                      3350        4    2625000\par
+97                      4080        6    2625000\par
+98                      3690        5    2625000\par
+99                      2620        2    1250000\par
+100                     3760        4    1160000\par
+101                     3760        4    1160000\par
+102                     5310        4    1862000\par
+103                     3420        3    1384950\par
+104                      900        1    1384950\par
+105                     3300        5    1150000\par
+106                     4790        4    1475000\par
+107                     5020        4    1975000\par
+108                     2590        5    1180000\par
+109                     2820        3    1787000\par
+110                     3130        4    1678000\par
+111                     4410        4    1220000\par
+112                     5100        4    1740000\par
+113                     5100        4    1740000\par
+114                     5170        4    1210000\par
+115                     4320        5    1200000\par
+116                     5290        3    1830000\par
+117                     1540        3    1651000\par
+118                     4630        4    1405000\par
+119                     4220        4    1274950\par
+120                     4630        4    1405000\par
+121                     4460        5    1425000\par
+122                     3200        3    1640000\par
+123                      310        0    1640000\par
+124                     4220        4    1280000\par
+125                     3970        5    1149950\par
+126                     4740        4    1500000\par
+127                     2695        3    1268000\par
+128                     2980        3    1710000\par
+129                     4340        4    1250000\par
+130                     3850        4    1140000\par
+131                     7980       11    1825000\par
+132                     3410        5    2590000\par
+133                     3660        4    2590000\par
+134                     4500        5    2590000\par
+135                     3480        4    2590000\par
+136                     3310        4    2590000\par
+137                     4340        5    2590000\par
+138                     4390        5    2590000\par
+139                     4710        5    2300000\par
+140                     5100        4    2300000\par
+141                     4910        4    2300000\par
+142                     5390        4    2598000\par
+143                     3740        4    1188800\par
+144                     6790        7    1990000\par
+145                    11810        7    3995000\par
+146                     5400        5    1850000\par
+147                     4310        4    1575000\par
+148                     4350        4    1265000\par
+149                     4760        4    1350000\par
+150                     4260        4    1130500\par
+151                     5520        4    1550000\par
+152                     6630        4    2081572\par
+153                     5320        4    2549000\par
+154                     4790        4    2080000\par
+155                     1290        2    1250000\par
+156                     1920        5    1250000\par
+157                     2690        3    1250000\par
+158                     7360        6    2189000\par
+159                     1290        2    3175000\par
+160                     1290        2    3175000\par
+161                     1600        3    3175000\par
+162                     1740        3    3175000\par
+163                     1710        3    3175000\par
+164                     1740        3    3175000\par
+165                     1710        3    3175000\par
+166                     1460        3    3175000\par
+167                     1820        3    3175000\par
+168                     1840        3    3175000\par
+169                     1840        3    3175000\par
+170                     1600        3    3175000\par
+171                     1840        3    3175000\par
+172                     1600        3    3175000\par
+173                     1290        2    3175000\par
+174                     1290        2    3175000\par
+175                     1290        2    3175000\par
+176                     1290        2    3175000\par
+177                     1290        2    3175000\par
+178                     1290        2    3175000\par
+179                     1290        2    3175000\par
+180                     1460        3    3175000\par
+181                     1710        3    3175000\par
+182                     1460        3    3175000\par
+183                     1740        3    3175000\par
+184                     1710        3    3175000\par
+185                     1710        3    3175000\par
+186                     1840        3    3175000\par
+187                     1840        3    3175000\par
+188                     1820        3    3175000\par
+189                     1290        2    3175000\par
+190                     1290        2    3175000\par
+191                     1290        2    3175000\par
+192                     1290        2    3175000\par
+193                     1290        2    3175000\par
+194                     4604        5    1750000\par
+195                     3805        4    1155000\par
+196                     4540        4    1300000\par
+197                     4800        4    1420000\par
+198                     4990        4    1580000\par
+199                     2280        3    1160000\par
+200                     3360        3    1177616\par
+201                     6200        4    1599000\par
+202                     1460        3    3150000\par
+203                     1600        3    3150000\par
+204                     1840        3    3150000\par
+205                     1840        3    3150000\par
+206                     1460        3    3150000\par
+207                     1600        3    3150000\par
+208                     1840        3    3150000\par
+209                     1600        3    3150000\par
+210                     1740        3    3150000\par
+211                     1710        3    3150000\par
+212                     1460        3    3150000\par
+213                     1740        3    3150000\par
+214                     1830        3    3150000\par
+215                     1740        3    3150000\par
+216                     1290        2    3150000\par
+217                     1290        2    3150000\par
+218                     1290        2    3150000\par
+219                     1290        2    3150000\par
+220                     1290        2    3150000\par
+221                     1290        2    3150000\par
+222                     1290        2    3150000\par
+223                     1840        3    3150000\par
+224                     1600        3    3150000\par
+225                     1840        3    3150000\par
+226                     1710        3    3150000\par
+227                     1740        3    3150000\par
+228                     1710        3    3150000\par
+229                     1840        4    3150000\par
+230                     1600        3    3150000\par
+231                     1840        3    3150000\par
+232                     1460        3    3150000\par
+233                     1290        2    3150000\par
+234                     1290        2    3150000\par
+235                     1290        2    3150000\par
+236                     3990        4    1175000\par
+237                     3980        4    2000000\par
+238                     5450        4    1340000\par
+239                     6380        6    2033000\par
+240                     3540        3    1200000\par
+241                     4640        4    1465000\par
+242                     3360        2    1174872\par
+243                     6610        4    1400000\par
+244                     4760        4    1510000\par
+245                     5390        4    1480000\par
+246                     4250        4    1202301\par
+247                     4930        4    1150000\par
+248                     4640        4    1119000\par
+249                     6690        5    1585000\par
+250                     4110        4    2000000\par
+251                      900        1    2000000\par
+252                     5300        4    1518050\par
+253                     5300        4    1518050\par
+254                     5150        4    1250000\par
+255                     5470        4    1250000\par
+256                     5050        4    1600000\par
+257                     2690        3    1149542\par
+258                     5790        3    4400000\par
+259                     2410        3    4400000\par
+260                     5780        4    1675000\par
+261                     5850        4    1620000\par
+262                     1430        2    2300000\par
+263                     5330        4    2300000\par
+264                     5060        5    1260000\par
+265                     6310        4    1637500\par
+266                     5270        4    1160000\par
+267                     2900        3    1448000\par
+268                     2800        4    1169000\par
+269                     7640        5    2300000\par
+270                     5640        4    1715000\par
+271                     6980        5    1600000\par
+272                      890        1    1430000\par
+273                     4766        4    1430000\par
+274                     3420        3    1300000\par
+275                      900        1    1300000\par
+276                     6010        4    1300000\par
+277                     6340        5    1295000\par
+278                     4210        4    1780000\par
+279                     3320        4    1407000\par
+280                     5830        4    1400000\par
+281                     4060        4    1400000\par
+282                     6310        4    1600000\par
+283                     3720        4    1395000\par
+284                     4870        5    1340000\par
+285                     5720        4    1250000\par
+286                     4330        4    1125000\par
+287                     6990        5    1715000\par
+288                     2960        4    1550000\par
+289                     3890        5    1550000\par
+290                     3830        5    1550000\par
+291                     3010        4    1550000\par
+292                     2960        4    1550000\par
+293                     2960        4    1550000\par
+294                     2950        5    1550000\par
+295                     3480        4    1550000\par
+296                     4950        5    1300000\par
+297                     5550        4    1870000\par
+298                     2880        3    1280000\par
+299                     5100        4    1230000\par
+300                     7120        4    1500000\par
+301                     4670        4    1220000\par
+302                     6280        4    1310000\par
+303                     5390        4    1450000\par
+304                     5190        4    1339400\par
+305                     5390        4    1450000\par
+306                     6280        5    1960000\par
+307                     3240        3    1200000\par
+308                     5200        4    1425000\par
+309                     5200        4    1425000\par
+310                     3560        5    1120000\par
+311                     5260        4    1500000\par
+312                     4910        4    1215700\par
+313                     4490        4    1150000\par
+314                     3320        4    2885000\par
+315                     3530        4    2885000\par
+316                     3720        4    2885000\par
+317                     3150        4    2885000\par
+318                     3340        5    2885000\par
+319                     3320        5    2885000\par
+320                     3340        5    2885000\par
+321                     3320        5    2885000\par
+322                     3060        4    2885000\par
+323                     3530        4    2885000\par
+324                     5390        4    1355000\par
+325                     6340        4    1370000\par
+326                     6380        6    1230000\par
+327                     3290        4    4380542\par
+328                     2450        4    4380542\par
+329                     2750        4    4380542\par
+330                     3010        4    4380542\par
+331                     3200        5    4380542\par
+332                     3200        5    4380542\par
+333                     3620        5    4380542\par
+ [ reached 'max' / getOption("max.print") -- omitted 392 rows ]\par
+> \par
+> \par
+> #Split a string, then concatenate the results back together\par
+> library(stringr)\par
+> midwest <- c(\par
++   "Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri",\par
++   "Nebraska, North Dakota, Ohio, South Dakota, Wisconsin"\par
++ )\par
+> midwest\par
+[1] "Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri" "Nebraska, North Dakota, Ohio, South Dakota, Wisconsin"         \par
+> midwest_list <- strsplit(midwest,split= ",")[[1]]\par
+> midwest_list\par
+[1] "Illinois"   " Indiana"   " Iowa"      " Kansas"    " Michigan"  " Minnesota" " Missouri" \par
+> paste(midwest_list,collapse=",")\par
+[1] "Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri"\par
+> \f0\par
+}
+ 
